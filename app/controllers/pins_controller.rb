@@ -4,8 +4,8 @@ class PinsController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
 
   def index
-   @pins = Pin.all.order("created_at DESC").paginate(:page => params[:page], :per_page => 8)
- end
+    @pins = Pin.all.order("created_at DESC").paginate(:page => params[:page], :per_page => 50)
+  end
 
   def show
   end
@@ -22,7 +22,7 @@ class PinsController < ApplicationController
     if @pin.save
       redirect_to @pin, notice: 'Pin was successfully created.'
     else
-      render action: 'new' 
+      render action: 'new'
     end
   end
 
@@ -30,7 +30,7 @@ class PinsController < ApplicationController
     if @pin.update(pin_params)
       redirect_to @pin, notice: 'Pin was successfully updated.'
     else
-      render :edit
+      render action: 'edit'
     end
   end
 
@@ -40,6 +40,7 @@ class PinsController < ApplicationController
   end
 
   private
+    # Use callbacks to share common setup or constraints between actions.
     def set_pin
       @pin = Pin.find(params[:id])
     end
@@ -49,6 +50,7 @@ class PinsController < ApplicationController
       redirect_to pins_path, notice: "Not authorized to edit this pin" if @pin.nil?
     end
 
+    # Never trust parameters from the scary internet, only allow the white list through.
     def pin_params
       params.require(:pin).permit(:description, :image)
     end
